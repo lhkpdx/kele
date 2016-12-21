@@ -15,7 +15,8 @@ class Kele
 
   def get_me
     response = self.class.get(api_url('users/me'), headers: { "authorization" => @auth_token })
-    @user_data = JSON.parse(response.body)
+    @user_data = JSON.parse(response.body).to_a
+    @user_id = @user_data[0][1]
   end
 
   def get_mentor_availability(mentor_id)
@@ -38,6 +39,18 @@ class Kele
           "subject": subject,
           "stripped-text": body})
     @success = response["success"]
+  end
+
+  def create_submission(checkpoint_id, assignment_branch, assignment_commit_link, comment, enrollment_id)
+    response = self.class.post(api_url("checkpoint_submissions"),
+      headers: { "authorization" => @auth_token },
+        body: {
+          "assignment_branch": assignment_branch,
+          "assignment_commit_link": assignment_commit_link,
+          "checkpoint_id": checkpoint_id,
+          "comment": comment,
+          "enrollment_id": @enrollment_id })
+    @submission_response = JSON.parse(response.body)
   end
 
 
