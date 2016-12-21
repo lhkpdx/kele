@@ -50,7 +50,7 @@ class Kele
           "checkpoint_id": checkpoint_id,
           "comment": comment,
           "enrollment_id": @enrollment_id })
-    @submission_response = JSON.parse(response.body)
+      @submission_response = JSON.parse([response.body].to_json).first
   end
 
 
