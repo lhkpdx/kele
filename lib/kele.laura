@@ -1,0 +1,32 @@
+require 'httparty'
+require 'json'
+
+class Kele
+  include HTTParty
+
+
+  def initialize(email, password)
+    @base_uri = "https://www.bloc.io/api/v1/sessions"
+    @email = email
+    @password = password
+    @auth_token = self.class.post(@base_uri, body: { email: @email, password: @password })
+    p @auth_token
+
+  end
+
+  def get_me
+    @base_uri = "https://www.bloc.io/api/v1/users/me"
+    @user_data = self.class.get(@base_uri, headers: { "authorization" => @auth_token })
+    readable = JSON.parse(@user_data)
+    p readable
+  end
+
+  private
+
+  def api_url(endpoint)
+    "https://www.bloc.io/api/v1/#{endpoint}"
+  end
+end
+
+
+#Use load './lib/kele.rb' to test from IRB
